@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">开屏跳过</string>
+    <string name="accessibility_service_description">只在你勾选的应用启动后短暂读取当前页面，查找并点击明确的“跳过广告”控件。不会读取后续页面，也不会发送数据。</string>
+</resources>
