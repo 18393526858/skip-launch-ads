@@ -24,7 +24,7 @@ Privacy-first Android launch-ad skipper powered by AccessibilityService.
 
 1. 安装 `app/build/outputs/apk/debug/app-debug.apk`。
 2. 打开应用，打开首页“自动跳过”总开关，并按提示启用系统辅助功能。
-3. 按首页右上角“设置说明”配置 vivo / OriginOS 的后台耗电、自启动和最近任务锁定。
+3. 按首页右上角“设置说明” 后台耗电、自启动和最近任务锁定。
 4. 返回应用即可，无需逐个选择 App 或修改规则；暂时不用时直接关闭首页总开关。
 5. 需要调整关键词或运行内置测试时，再进入右上角“高级设置”。
 
