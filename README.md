@@ -1,6 +1,6 @@
 # LaunchAdSkip
 
-[![Android CI](https://github.com/18393526858/launch-ad-skip/actions/workflows/android-ci.yml/badge.svg)](https://github.com/18393526858/launch-ad-skip/actions/workflows/android-ci.yml)
+[![Android CI](https://github.com/18393526858/skip-launch-ads/actions/workflows/android-ci.yml/badge.svg)](https://github.com/18393526858/skip-launch-ads/actions/workflows/android-ci.yml)
 
 **This project is shared so that more experienced Android developers can help improve its compatibility, safety, and reliability. Issues and pull requests are welcome.**
 

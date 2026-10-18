@@ -31,12 +31,12 @@ jobs:
         run: ./gradlew --no-daemon testDebugUnitTest lintDebug assembleDebug
 
       - name: Prepare APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk "launch-ad-skip-${GITHUB_REF_NAME}-debug.apk"
+        run: cp app/build/outputs/apk/debug/app-debug.apk "skip-launch-ads-${GITHUB_REF_NAME}-debug.apk"
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: launch-ad-skip-${{ github.ref_name }}-debug.apk
+          files: skip-launch-ads-${{ github.ref_name }}-debug.apk
           generate_release_notes: true
           body: |
             Debug-signed APK for personal sideloading.
