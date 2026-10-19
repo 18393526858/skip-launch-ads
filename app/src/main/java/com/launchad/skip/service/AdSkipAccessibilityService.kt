@@ -1,6 +1,8 @@
 package com.launchad.skip.service
 
 import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.GestureDescription
+import android.graphics.Path
 import android.graphics.Rect
 import android.os.SystemClock
 import android.view.accessibility.AccessibilityEvent
@@ -86,7 +88,7 @@ class AdSkipAccessibilityService : AccessibilityService() {
             AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
                 val isDebugDemo = BuildConfig.DEBUG &&
                     packageName == this.packageName &&
-                    className == DemoSplashActivity::class.java.name
+                    className.contains("DemoSplashActivity")
                 val launchedFromHome = lastWindowPackage == null ||
                     lastWindowPackage in homePackages ||
                     lastWindowPackage == "com.android.systemui"
@@ -147,8 +149,10 @@ class AdSkipAccessibilityService : AccessibilityService() {
         }
         val result = scan.target ?: return
 
-        val clicked = engine.canClick() &&
-            result.clickableNode.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+        val clicked = engine.canClick() && (
+            result.clickableNode.performAction(AccessibilityNodeInfo.ACTION_CLICK) ||
+                performTextCenterTap(result.anchorBounds)
+            )
 
         val appLabel = if (BuildConfig.DEBUG && packageName == this.packageName) {
             "内置测试广告"
@@ -219,7 +223,11 @@ class AdSkipAccessibilityService : AccessibilityService() {
                     ) {
                         continue
                     }
-                    val clickTarget = ClickTarget(clickableNode, match)
+                    val clickTarget = ClickTarget(
+                        clickableNode = clickableNode,
+                        match = match,
+                        anchorBounds = Rect().also(node::getBoundsInScreen),
+                    )
                     if (AdSignals.isStrongRule(match.keyword) || hasCountdown || hasAdMarker) {
                         return WindowScan(
                             target = clickTarget,
@@ -231,7 +239,11 @@ class AdSkipAccessibilityService : AccessibilityService() {
                     }
                 }
                 if (unclickableFallback == null) {
-                    unclickableFallback = ClickTarget(node, match)
+                    unclickableFallback = ClickTarget(
+                        clickableNode = node,
+                        match = match,
+                        anchorBounds = Rect().also(node::getBoundsInScreen),
+                    )
                 }
             } else if (genericCloseTarget == null &&
                 AdSignals.isGenericClose(candidates)
@@ -261,6 +273,7 @@ class AdSkipAccessibilityService : AccessibilityService() {
                                 displayText = candidates.firstOrNull { it != null } ?: "关闭",
                                 keyword = "关闭",
                             ),
+                            anchorBounds = Rect().also(node::getBoundsInScreen),
                         )
                     }
                 }
@@ -294,6 +307,17 @@ class AdSkipAccessibilityService : AccessibilityService() {
                 )
             }
         }
+    }
+
+    private fun performTextCenterTap(bounds: Rect): Boolean {
+        if (bounds.width() <= 0 || bounds.height() <= 0) return false
+        val path = Path().apply {
+            moveTo(bounds.exactCenterX(), bounds.exactCenterY())
+        }
+        val gesture = GestureDescription.Builder()
+            .addStroke(GestureDescription.StrokeDescription(path, 0L, 60L))
+            .build()
+        return dispatchGesture(gesture, null, null)
     }
 
     private fun findClickableNode(source: AccessibilityNodeInfo): AccessibilityNodeInfo? {
@@ -332,6 +356,7 @@ class AdSkipAccessibilityService : AccessibilityService() {
     private data class ClickTarget(
         val clickableNode: AccessibilityNodeInfo,
         val match: SkipMatch,
+        val anchorBounds: Rect,
     )
 
     private data class WindowScan(

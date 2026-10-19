@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,12 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,7 +31,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.launchad.skip.ui.LaunchAdSkipTheme
@@ -76,17 +73,6 @@ private fun DemoAdScreen(onSkip: () -> Unit) {
             .systemBarsPadding()
             .padding(20.dp),
     ) {
-        IconButton(
-            onClick = {},
-            modifier = Modifier.align(Alignment.TopEnd),
-        ) {
-            Icon(
-                Icons.Rounded.Close,
-                contentDescription = "关闭",
-                tint = Color.White.copy(alpha = 0.8f),
-            )
-        }
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -135,20 +121,25 @@ private fun DemoAdScreen(onSkip: () -> Unit) {
         }
 
         if (showSkip) {
-            Button(
-                onClick = onSkip,
+            Row(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(bottom = 12.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFF5B942),
-                    contentColor = Color(0xFF241600),
-                ),
-                shape = RoundedCornerShape(8.dp),
+                    .padding(bottom = 12.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color(0xFFF5B942))
+                    .pointerInput(Unit) {
+                        detectTapGestures(onTap = { onSkip() })
+                    }
+                    .padding(horizontal = 24.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text("5s")
+                Text("5s", color = Color(0xFF241600))
                 Spacer(Modifier.size(8.dp))
-                Text("跳过广告", fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = "跳过广告",
+                    color = Color(0xFF241600),
+                    fontWeight = FontWeight.SemiBold,
+                )
             }
         }
     }
