@@ -69,6 +69,12 @@ class ProtectablePackageResolver(private val context: Context) {
             "com.heytap.launcher",
             "com.bbk.launcher",
             "com.bbk.launcher2",
+            "com.bbk.launcher3",
+            "com.vivo.hiboard",
+            "com.vivo.launcher",
+            "com.vivo.launcher6",
+            "com.coloros.launcher",
+            "com.hihonor.android.launcher",
         )
     }
 }

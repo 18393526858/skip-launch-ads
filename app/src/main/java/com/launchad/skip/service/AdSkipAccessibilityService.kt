@@ -148,7 +148,6 @@ class AdSkipAccessibilityService : AccessibilityService() {
             shakeGuard.recordHint(packageName, now)
         }
         val result = scan.target ?: return
-
         val clicked = engine.canClick() && (
             result.clickableNode.performAction(AccessibilityNodeInfo.ACTION_CLICK) ||
                 performTextCenterTap(result.anchorBounds)
